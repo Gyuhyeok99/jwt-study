@@ -13,7 +13,6 @@ import jwt.security.domain.user.User;
 import jwt.security.token.RefreshTokenRepository;
 import jwt.security.user.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -29,7 +28,7 @@ import static jwt.security.util.Jwt.TOKEN_PREFIX;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class AuthenticationService {
+public class AuthService {
   private final UserRepository userRepository;
   private final RefreshTokenRepository refreshTokenRepository;
   private final PasswordEncoder passwordEncoder;
@@ -70,7 +69,10 @@ public class AuthenticationService {
         .build();
   }
 
-  private void saveUserToken(User user, String refreshToken) {
+
+  @Transactional
+
+  public void saveUserToken(User user, String refreshToken) {
     var token = Token.builder()
         .user(user)
         .token(refreshToken)
@@ -80,8 +82,8 @@ public class AuthenticationService {
         .build();
     refreshTokenRepository.save(token);
   }
-
-  private void revokeAllUserTokens(User user) {
+  @Transactional
+  public void revokeAllUserTokens(User user) {
     List<Token> validUserTokens = refreshTokenRepository.findAllValidTokenByUser(user.getId());
     if (validUserTokens.isEmpty())
       return;
@@ -91,6 +93,8 @@ public class AuthenticationService {
     });
     refreshTokenRepository.saveAll(validUserTokens);
   }
+
+  @Transactional
 
   public void refreshToken(
           HttpServletRequest request,
