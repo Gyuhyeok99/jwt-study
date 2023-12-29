@@ -12,3 +12,11 @@ spring:
     properties:
       hibernate:
         format_sql: true
+
+
+jwt:
+  issuer: test@test.com
+  secret_key: ${JWT_SECRET_KEY}
+  expiration: 86400000 # 1 day
+  refresh-token:
+    expiration: 604800000 # 7 days
