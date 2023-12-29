@@ -1,6 +1,7 @@
 package jwt.security.user;
 
 import jwt.security.domain.user.User;
+import jwt.security.user.dto.ChangePasswordReq;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

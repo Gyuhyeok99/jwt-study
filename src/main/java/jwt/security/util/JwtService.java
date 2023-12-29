@@ -1,4 +1,4 @@
-package jwt.security.config;
+package jwt.security.util;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Header;

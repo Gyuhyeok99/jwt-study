@@ -1,4 +1,4 @@
-package jwt.security.config;
+package jwt.security.util;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

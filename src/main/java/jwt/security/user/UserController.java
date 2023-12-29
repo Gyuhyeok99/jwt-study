@@ -1,5 +1,6 @@
 package jwt.security.user;
 
+import jwt.security.user.dto.ChangePasswordReq;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PatchMapping;

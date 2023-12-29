@@ -1,4 +1,4 @@
-package jwt.security.user;
+package jwt.security.user.dto;
 
 import lombok.*;
 

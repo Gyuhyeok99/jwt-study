@@ -1,4 +1,4 @@
-package jwt.security.config;
+package jwt.security.config.app;
 
 import jwt.security.auditing.ApplicationAuditAware;
 import jwt.security.user.UserRepository;

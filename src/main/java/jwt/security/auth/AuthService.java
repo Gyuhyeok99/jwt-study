@@ -6,7 +6,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jwt.security.auth.dto.AuthReq;
 import jwt.security.auth.dto.AuthRes;
 import jwt.security.auth.dto.RegisterReq;
-import jwt.security.config.JwtService;
+import jwt.security.util.JwtService;
 import jwt.security.domain.token.Token;
 import jwt.security.domain.token.TokenType;
 import jwt.security.domain.user.User;
