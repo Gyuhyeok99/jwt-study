@@ -31,4 +31,11 @@ public class Token {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     public User user;
+
+    public void setExpired(boolean expired) {
+        this.expired = expired;
+    }
+    public void setRevoked(boolean revoked) {
+        this.revoked = revoked;
+    }
 }

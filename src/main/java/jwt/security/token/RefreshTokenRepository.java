@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 import java.util.Optional;
 
-public interface TokenRepository extends JpaRepository<Token, Integer> {
+public interface RefreshTokenRepository extends JpaRepository<Token, Integer> {
 
   @Query(value = """
       select t from Token t inner join User u\s
@@ -16,4 +16,5 @@ public interface TokenRepository extends JpaRepository<Token, Integer> {
       """)
   List<Token> findAllValidTokenByUser(Integer id);
   Optional<Token> findByToken(String token);
+  Optional<Token> findByUser_Email(String email);
 }
