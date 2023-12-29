@@ -115,11 +115,9 @@ public class AuthService {
               .orElseThrow(() -> new IllegalArgumentException("유저 존재하지 않음"));
       if (jwtService.isTokenValid(refreshToken, user)) {
         String accessToken = jwtService.generateToken(user);
-        revokeAllUserTokens(user);
-        saveUserToken(user, accessToken);
         AuthRes authRes = AuthRes.builder()
                 .accessToken(accessToken)
-                .refreshToken(refreshToken)
+                .refreshToken(null)
                 .build();
         new ObjectMapper().writeValue(response.getOutputStream(), authRes);
       }
