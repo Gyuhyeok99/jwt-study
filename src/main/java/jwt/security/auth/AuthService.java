@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jwt.security.auth.dto.AuthReq;
 import jwt.security.auth.dto.AuthRes;
 import jwt.security.auth.dto.RegisterReq;
+import jwt.security.config.exception.handler.UserHandler;
 import jwt.security.utils.JwtService;
 import jwt.security.domain.user.User;
 import jwt.security.user.UserRepository;
@@ -20,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 
+import static jwt.security.config.code.status.ErrorStatus.USER_NOT_FOUND;
 import static jwt.security.utils.Jwt.HEADER_AUTHORIZATION;
 import static jwt.security.utils.Jwt.TOKEN_PREFIX;
 
@@ -96,7 +98,7 @@ public class AuthService {
     userEmail = jwtService.extractUsername(refreshToken);
     if (userEmail != null) {
       User user = userRepository.findByEmail(userEmail)
-              .orElseThrow(() -> new IllegalArgumentException("유저 존재하지 않음"));
+              .orElseThrow(() -> new UserHandler(USER_NOT_FOUND));
       if (jwtService.isTokenValid(refreshToken, user)) {
         String accessToken = jwtService.generateToken(user);
         AuthRes authRes = AuthRes.builder()
