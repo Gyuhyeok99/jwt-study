@@ -1,5 +1,6 @@
 package jwt.security.user;
 
+import jwt.security.config.ApiResponse;
 import jwt.security.user.dto.ChangePasswordReq;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -18,8 +19,8 @@ public class UserController {
     private final UserService userService;
 
     @PatchMapping
-    public ResponseEntity<?> changePassword(@RequestBody ChangePasswordReq request, Principal connectedUser) {
+    public ApiResponse<?> changePassword(@RequestBody ChangePasswordReq request, Principal connectedUser) {
         userService.changePassword(request, connectedUser);
-        return ResponseEntity.ok().build();
+        return ApiResponse.onSuccess("비밀번호 변경 완료");
     }
 }
