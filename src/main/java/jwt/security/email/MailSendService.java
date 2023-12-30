@@ -63,7 +63,7 @@ public class MailSendService {
         }
         makeRandomNumber();
         mailSend(username, email, EMAIL_TITLE, EMAIL_CONTENT_PREFIX + authNumber + EMAIL_CONTENT_SUFFIX);
-        return Integer.toString(authNumber);
+        return "이메일 전송 완료";
     }
 
     //이메일을 전송합니다.
