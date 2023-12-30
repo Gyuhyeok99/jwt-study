@@ -6,7 +6,6 @@ import jwt.security.config.exception.handler.MailHandler;
 import jwt.security.utils.RedisService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -54,11 +53,9 @@ public class MailSendService {
     //mail을 어디서 보내는지, 어디로 보내는지 , 인증 번호를 html 형식으로 어떻게 보내는지 작성
     public String joinEmail(String email) {
         // 이메일에 대한 기존 인증번호가 있는지 확인하고, 있다면 삭제
-        //String oldAuthNum = redisUtil.getData(email);
         String oldAuthNum = redisService.getValueOps(email);
         if (oldAuthNum != null) {
             log.info("기존 인증번호 삭제 : {}", oldAuthNum);
-            //redisUtil.deleteData(email);
             redisService.deleteValueOps(email);
         }
         makeRandomNumber();

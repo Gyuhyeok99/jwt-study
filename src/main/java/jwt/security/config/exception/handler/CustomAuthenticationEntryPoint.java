@@ -5,7 +5,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jwt.security.config.code.ErrorReasonDTO;
 import jwt.security.config.code.status.ErrorStatus;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
@@ -23,9 +22,9 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
                          AuthenticationException authenticationException) throws IOException {
 
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-        response.setStatus(ErrorStatus._UNAUTHORIZED.getHttpStatus().value());
+        response.setStatus(ErrorStatus.UNAUTHORIZED.getHttpStatus().value());
 
-        ErrorReasonDTO errorReasonDTO = ErrorStatus._UNAUTHORIZED.getReasonHttpStatus();
+        ErrorReasonDTO errorReasonDTO = ErrorStatus.UNAUTHORIZED.getReasonHttpStatus();
 
         try (OutputStream os = response.getOutputStream()) {
             ObjectMapper objectMapper = new ObjectMapper();

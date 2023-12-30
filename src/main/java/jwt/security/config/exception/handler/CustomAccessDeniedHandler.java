@@ -21,9 +21,9 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
                        AccessDeniedException accessDeniedException) throws IOException {
 
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-        response.setStatus(ErrorStatus._FORBIDDEN.getHttpStatus().value());
+        response.setStatus(ErrorStatus.FORBIDDEN.getHttpStatus().value());
 
-        ErrorReasonDTO errorReasonDTO = ErrorStatus._FORBIDDEN.getReasonHttpStatus();
+        ErrorReasonDTO errorReasonDTO = ErrorStatus.FORBIDDEN.getReasonHttpStatus();
 
         try (OutputStream os = response.getOutputStream()) {
             ObjectMapper objectMapper = new ObjectMapper();
