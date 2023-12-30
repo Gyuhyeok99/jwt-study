@@ -8,6 +8,7 @@ import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Duration;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
@@ -35,6 +36,12 @@ public class RedisService {
 
     public void deleteValueOps(String key) {
         redisTemplate.delete(key);
+    }
+
+    public void setDataExpire(String key,String value,long duration){
+        ValueOperations<String,Object> valueOperations= redisTemplate.opsForValue();
+        Duration expireDuration=Duration.ofSeconds(duration);
+        valueOperations.set(key,value,expireDuration);
     }
 
 
