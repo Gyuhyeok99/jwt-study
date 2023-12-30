@@ -2,6 +2,7 @@ package jwt.security.domain.user;
 
 import jakarta.persistence.*;
 import jwt.security.domain.user.enums.Role;
+import jwt.security.utils.BaseTimeEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -17,7 +18,7 @@ import java.util.Collection;
 @Entity
 @Getter
 @Table(name = "users")
-public class User implements UserDetails {
+public class User extends BaseTimeEntity implements UserDetails {
 
     @Id
     @GeneratedValue
