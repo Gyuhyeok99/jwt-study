@@ -20,6 +20,6 @@ spring:
 jwt:
   issuer: test@test.com
   secret_key: ${JWT_SECRET_KEY}
-  expiration: 400 #86400000 # 1 day
+  expiration: 86400000 # 1 day
   refresh-token:
-    expiration: 800 #604800000 # 7 days
+    expiration: 604800000 # 7 days

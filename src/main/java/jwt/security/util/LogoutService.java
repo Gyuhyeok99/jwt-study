@@ -2,9 +2,8 @@ package jwt.security.util;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jwt.security.domain.token.Token;
-import jwt.security.token.RefreshTokenRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
@@ -15,10 +14,11 @@ import static jwt.security.util.Jwt.TOKEN_PREFIX;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class LogoutService implements LogoutHandler {
 
-  private final RefreshTokenRepository refreshTokenRepository;
   private final JwtService jwtService;
+  private final RedisService redisService;
 
   @Override
   public void logout(
@@ -31,16 +31,10 @@ public class LogoutService implements LogoutHandler {
     if (authHeader == null ||!authHeader.startsWith(TOKEN_PREFIX)) {
       return;
     }
-
     jwt = authHeader.substring(7);
     String username = jwtService.extractUsername(jwt);
-    Token storedToken = refreshTokenRepository.findByUser_Email(username)
-            .orElseThrow(() -> new IllegalArgumentException("Invalid token"));
-    if (storedToken != null) {
-      storedToken.setExpired(true);
-      storedToken.setRevoked(true);
-      refreshTokenRepository.save(storedToken);
+    log.info("username: {}", username);
+    redisService.deleteValueOps(username);
       SecurityContextHolder.clearContext();
     }
-  }
 }

@@ -34,9 +34,6 @@ public class AuthService {
   private final RedisService redisService;
   private final AuthenticationManager authenticationManager;
 
-
-
-
   @Transactional
   public AuthRes register(RegisterReq req) {
     User user = User.builder()
