@@ -23,3 +23,7 @@ jwt:
   expiration: 86400000 # 1 day
   refresh-token:
     expiration: 604800000 # 7 days
+
+email:
+  username: ${EMAIL_USERNAME}
+  password: ${EMAIL_PASSWORD}
