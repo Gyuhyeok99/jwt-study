@@ -12,6 +12,7 @@ import jwt.security.domain.token.TokenType;
 import jwt.security.domain.user.User;
 import jwt.security.token.RefreshTokenRepository;
 import jwt.security.user.UserRepository;
+import jwt.security.util.RedisService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -35,6 +36,7 @@ public class AuthService {
   private final RefreshTokenRepository refreshTokenRepository;
   private final PasswordEncoder passwordEncoder;
   private final JwtService jwtService;
+  private final RedisService redisService;
   private final AuthenticationManager authenticationManager;
 
   @Transactional
@@ -82,7 +84,10 @@ public class AuthService {
         .expired(false)
         .revoked(false)
         .build();
-    refreshTokenRepository.save(token);
+    redisService.setValueOps(user.getEmail(), refreshToken);
+    redisService.expireValues(user.getEmail(), 3600 * 1000);
+
+    //refreshTokenRepository.save(token); // 이 부분은 Redis를 사용하면서 주석 처리
   }
   @Transactional
   public void revokeAllUserTokens(User user) {

@@ -8,7 +8,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 import java.util.Optional;
 
-public interface RefreshTokenRepository extends JpaRepository<Token, Integer> {
+public interface RefreshTokenRepository extends JpaRepository<Token, Long> {
 
   @Query(value = """
     select t from Token t inner join User u\s
