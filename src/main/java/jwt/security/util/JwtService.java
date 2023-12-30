@@ -102,4 +102,19 @@ public class JwtService {
     byte[] keyBytes = Decoders.BASE64.decode(secretKey);
     return Keys.hmacShaKeyFor(keyBytes);
   }
+
+  //토큰 발급 시간
+  public Long getIssuedAt (String token) {
+    Claims claims = getClaims(token);
+    return claims.getIssuedAt().getTime();
+  }
+
+  private Claims getClaims(String token) {
+    return Jwts.parser()
+            .setSigningKey(secretKey)
+            .parseClaimsJws(token)
+            .getBody();
+  }
+
+
 }

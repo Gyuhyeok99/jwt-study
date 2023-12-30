@@ -2,6 +2,7 @@ package jwt.security.util;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
@@ -15,9 +16,11 @@ import java.util.concurrent.TimeUnit;
 @Transactional
 public class RedisService {
     private final RedisTemplate<String, Object> redisTemplate;
+    @Value("${jwt.refresh-token.expiration}")
+    private Long refreshExpiration;
 
-    public void expireValues(String key, long timeout) {
-        redisTemplate.expire(key, timeout, TimeUnit.MILLISECONDS);
+    public void expireValues(String key) {
+        redisTemplate.expire(key, refreshExpiration, TimeUnit.MILLISECONDS);
     }
 
     public void setValueOps(String key, String value) {

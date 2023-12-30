@@ -7,10 +7,7 @@ import jwt.security.auth.dto.AuthReq;
 import jwt.security.auth.dto.AuthRes;
 import jwt.security.auth.dto.RegisterReq;
 import jwt.security.util.JwtService;
-import jwt.security.domain.token.Token;
-import jwt.security.domain.token.TokenType;
 import jwt.security.domain.user.User;
-import jwt.security.token.RefreshTokenRepository;
 import jwt.security.user.UserRepository;
 import jwt.security.util.RedisService;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +19,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
-import java.util.List;
 
 import static jwt.security.util.Jwt.HEADER_AUTHORIZATION;
 import static jwt.security.util.Jwt.TOKEN_PREFIX;
@@ -33,11 +29,13 @@ import static jwt.security.util.Jwt.TOKEN_PREFIX;
 @Slf4j
 public class AuthService {
   private final UserRepository userRepository;
-  private final RefreshTokenRepository refreshTokenRepository;
   private final PasswordEncoder passwordEncoder;
   private final JwtService jwtService;
   private final RedisService redisService;
   private final AuthenticationManager authenticationManager;
+
+
+
 
   @Transactional
   public AuthRes register(RegisterReq req) {
@@ -50,6 +48,7 @@ public class AuthService {
     User savedUser = userRepository.save(user);
     String accessToken = jwtService.generateToken(user);
     String refreshToken = jwtService.generateRefreshToken(user);
+    //Long issuedAt = jwtService.getIssuedAt(refreshToken);
     saveUserToken(savedUser, refreshToken);
     return AuthRes.builder()
             .accessToken(accessToken)
@@ -77,32 +76,17 @@ public class AuthService {
   @Transactional
 
   public void saveUserToken(User user, String refreshToken) {
-    var token = Token.builder()
-        .user(user)
-        .token(refreshToken)
-        .tokenType(TokenType.BEARER)
-        .expired(false)
-        .revoked(false)
-        .build();
+    //key는 사용자 이메일과 토큰 발급 시간으로 구성 // 추후에 발급 시간이 아닌 기기로 구분하는 거로 수정해야함
+    //redisService.setValueOps(user.getEmail() + ":" + issuedAt, refreshToken);
     redisService.setValueOps(user.getEmail(), refreshToken);
-    redisService.expireValues(user.getEmail(), 3600 * 1000);
-
-    //refreshTokenRepository.save(token); // 이 부분은 Redis를 사용하면서 주석 처리
+    redisService.expireValues(user.getEmail());
   }
   @Transactional
   public void revokeAllUserTokens(User user) {
-    List<Token> validUserTokens = refreshTokenRepository.findAllValidTokenByUser(user.getId());
-    if (validUserTokens.isEmpty())
-      return;
-    validUserTokens.forEach(token -> {
-      token.setExpired(true);
-      token.setRevoked(true);
-    });
-    refreshTokenRepository.saveAll(validUserTokens);
+    redisService.deleteValueOps(user.getEmail());
   }
 
   @Transactional
-
   public void refreshToken(
           HttpServletRequest request,
           HttpServletResponse response
