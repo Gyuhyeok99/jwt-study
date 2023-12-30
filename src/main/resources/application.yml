@@ -16,6 +16,17 @@ spring:
     redis:
       port: 6379
       host: 127.0.0.1
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${EMAIL} # gmail 계정
+    password: ${APP_PASSWORD} # gmail 패스워드
+    properties:
+      mail:
+        smtp:
+          starttls:
+            enable: true
+          auth: true
 
 jwt:
   issuer: test@test.com
@@ -24,6 +35,3 @@ jwt:
   refresh-token:
     expiration: 604800000 # 7 days
 
-email:
-  username: ${EMAIL_USERNAME}
-  password: ${EMAIL_PASSWORD}
