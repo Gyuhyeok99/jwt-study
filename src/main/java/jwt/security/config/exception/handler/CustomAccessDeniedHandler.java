@@ -3,7 +3,6 @@ package jwt.security.config.exception.handler;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jwt.security.config.code.BaseErrorCode;
 import jwt.security.config.code.ErrorReasonDTO;
 import jwt.security.config.code.status.ErrorStatus;
 import org.springframework.http.MediaType;
