@@ -1,5 +1,6 @@
 package jwt.security.user;
 
+import jwt.security.config.exception.handler.UserHandler;
 import jwt.security.domain.user.User;
 import jwt.security.user.dto.ChangePasswordReq;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +11,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.security.Principal;
+
+import static jwt.security.config.code.status.ErrorStatus.PASSWORD_NOT_MATCH;
+import static jwt.security.config.code.status.ErrorStatus.PASSWORD_NOT_MATCH_CONFIRM;
 
 @Service
 @RequiredArgsConstructor
@@ -28,11 +32,11 @@ public class UserService {
         log.info("현재 비밀번호 : {}", user.getPassword());
         // 만약 현재 비밀번호가 맞지 않다면 예외
         if (!passwordEncoder.matches(req.getCurrentPassword(), user.getPassword())) {
-            throw new IllegalStateException("비밀번호가 일치하지 않습니다.");
+            throw new UserHandler(PASSWORD_NOT_MATCH);
         }
         // 만약 새로운 비밀번호와 확인 비밀번호가 일치하지 않다면 예외
         if (!req.getNewPassword().equals(req.getConfirmationPassword())) {
-            throw new IllegalStateException("새 비밀번호가 일치하지 않습니다.");
+            throw new UserHandler(PASSWORD_NOT_MATCH_CONFIRM);
         }
         // 비밀번호 업데이트
         user.setPassword(passwordEncoder.encode(req.getNewPassword()));
