@@ -6,10 +6,10 @@ import jakarta.servlet.http.HttpServletResponse;
 import jwt.security.auth.dto.AuthReq;
 import jwt.security.auth.dto.AuthRes;
 import jwt.security.auth.dto.RegisterReq;
-import jwt.security.util.JwtService;
+import jwt.security.utils.JwtService;
 import jwt.security.domain.user.User;
 import jwt.security.user.UserRepository;
-import jwt.security.util.RedisService;
+import jwt.security.utils.RedisService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -20,8 +20,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 
-import static jwt.security.util.Jwt.HEADER_AUTHORIZATION;
-import static jwt.security.util.Jwt.TOKEN_PREFIX;
+import static jwt.security.utils.Jwt.HEADER_AUTHORIZATION;
+import static jwt.security.utils.Jwt.TOKEN_PREFIX;
 
 @Service
 @RequiredArgsConstructor

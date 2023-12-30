@@ -1,6 +1,6 @@
 package jwt.security.config.security;
 
-import jwt.security.util.JwtAuthenticationFilter;
+import jwt.security.utils.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,8 +15,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 
 import static io.lettuce.core.AclCategory.ADMIN;
-import static jwt.security.domain.user.Permission.*;
-import static jwt.security.domain.user.Role.MANAGER;
+import static jwt.security.domain.user.enums.Permission.*;
+import static jwt.security.domain.user.enums.Role.MANAGER;
 import static org.springframework.http.HttpMethod.*;
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 

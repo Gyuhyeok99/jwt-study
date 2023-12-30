@@ -1,4 +1,4 @@
-package jwt.security.util;
+package jwt.security.utils;
 
 public class Jwt {
 

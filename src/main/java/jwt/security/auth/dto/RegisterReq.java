@@ -1,6 +1,6 @@
 package jwt.security.auth.dto;
 
-import jwt.security.domain.user.Role;
+import jwt.security.domain.user.enums.Role;
 import lombok.*;
 
 @Builder

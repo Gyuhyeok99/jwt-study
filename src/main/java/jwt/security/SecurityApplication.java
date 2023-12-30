@@ -8,8 +8,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
-import static jwt.security.domain.user.Role.ADMIN;
-import static jwt.security.domain.user.Role.MANAGER;
+import static jwt.security.domain.user.enums.Role.ADMIN;
+import static jwt.security.domain.user.enums.Role.MANAGER;
 
 @SpringBootApplication
 @EnableJpaAuditing(auditorAwareRef = "auditorAware")

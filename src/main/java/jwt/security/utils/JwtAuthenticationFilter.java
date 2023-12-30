@@ -1,4 +1,4 @@
-package jwt.security.util;
+package jwt.security.utils;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -16,8 +16,8 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
-import static jwt.security.util.Jwt.HEADER_AUTHORIZATION;
-import static jwt.security.util.Jwt.TOKEN_PREFIX;
+import static jwt.security.utils.Jwt.HEADER_AUTHORIZATION;
+import static jwt.security.utils.Jwt.TOKEN_PREFIX;
 
 @Component
 @RequiredArgsConstructor

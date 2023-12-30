@@ -1,4 +1,4 @@
-package jwt.security.domain.user;
+package jwt.security.domain.user.enums;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

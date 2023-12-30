@@ -1,4 +1,4 @@
-package jwt.security.util;
+package jwt.security.utils;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

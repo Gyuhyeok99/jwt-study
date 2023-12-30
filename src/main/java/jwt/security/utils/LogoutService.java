@@ -1,4 +1,4 @@
-package jwt.security.util;
+package jwt.security.utils;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -9,8 +9,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.stereotype.Service;
 
-import static jwt.security.util.Jwt.HEADER_AUTHORIZATION;
-import static jwt.security.util.Jwt.TOKEN_PREFIX;
+import static jwt.security.utils.Jwt.HEADER_AUTHORIZATION;
+import static jwt.security.utils.Jwt.TOKEN_PREFIX;
 
 @Service
 @RequiredArgsConstructor

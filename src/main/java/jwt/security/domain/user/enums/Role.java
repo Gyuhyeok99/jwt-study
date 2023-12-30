@@ -1,4 +1,4 @@
-package jwt.security.domain.user;
+package jwt.security.domain.user.enums;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static jwt.security.domain.user.Permission.*;
+import static jwt.security.domain.user.enums.Permission.*;
 
 
 @RequiredArgsConstructor

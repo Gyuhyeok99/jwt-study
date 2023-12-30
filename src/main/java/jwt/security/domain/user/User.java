@@ -1,6 +1,7 @@
 package jwt.security.domain.user;
 
 import jakarta.persistence.*;
+import jwt.security.domain.user.enums.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
