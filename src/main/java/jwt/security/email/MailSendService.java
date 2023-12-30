@@ -2,7 +2,9 @@ package jwt.security.email;
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
+import jwt.security.config.exception.handler.MailHandler;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -10,31 +12,31 @@ import org.springframework.stereotype.Service;
 
 import java.util.Random;
 
+import static jwt.security.config.code.status.ErrorStatus.EMAIL_AUTH_NOT_MATCH;
+
 @Service
+@Slf4j
 public class MailSendService {
     @Autowired
     private JavaMailSender mailSender;
     @Autowired
     private RedisUtil redisUtil;
+
     private int authNumber;
 
-
-
-    //추가 되었다.
-    public boolean CheckAuthNum(String email,String authNum){
-        if(redisUtil.getData(authNum)==null){
-            return false;
-        }
-        else if(redisUtil.getData(authNum).equals(email)){
+    public Boolean checkAuthNum(String email, String authNum) {
+        String storedEmail = redisUtil.getData(authNum);
+        if (storedEmail != null && storedEmail.equals(email)) {
+            log.info("이메일 인증 성공");
             return true;
-        }
-        else{
-            return false;
+        } else {
+            log.info("이메일 인증 실패");
+            throw new MailHandler(EMAIL_AUTH_NOT_MATCH);
         }
     }
 
 
-    //임의의 6자리 양수를 반환합니다.
+    //임의의 6자리 양수를 반환
     public void makeRandomNumber() {
         Random r = new Random();
         String randomNumber = "";

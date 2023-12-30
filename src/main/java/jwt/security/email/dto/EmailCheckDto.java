@@ -1,4 +1,4 @@
-package jwt.security.email;
+package jwt.security.email.dto;
 
 
 import jakarta.validation.constraints.Email;

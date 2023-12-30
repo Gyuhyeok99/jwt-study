@@ -26,6 +26,15 @@ public enum ErrorStatus implements BaseErrorCode {
     PASSWORD_NOT_MATCH_CONFIRM(HttpStatus.BAD_REQUEST, "MEMBER4003", "새비밀번호와 재입력한 새비밀번호가 일치하지 않습니다."),
     USER_ALREADY_EXIST(HttpStatus.BAD_REQUEST, "MEMBER4004", "이미 존재하는 사용자입니다."),
 
+    // 이메일 관련 에러
+    EMAIL_NOT_FOUND(HttpStatus.BAD_REQUEST, "EMAIL4001", "이메일이 존재하지 않습니다."),
+    EMAIL_ALREADY_EXIST(HttpStatus.BAD_REQUEST, "EMAIL4002", "이미 존재하는 이메일입니다."),
+    EMAIL_SEND_FAIL(HttpStatus.BAD_REQUEST, "EMAIL4003", "이메일 전송에 실패했습니다."),
+    EMAIL_AUTH_FAIL(HttpStatus.BAD_REQUEST, "EMAIL4004", "이메일 인증에 실패했습니다."),
+    EMAIL_AUTH_EXPIRED(HttpStatus.BAD_REQUEST, "EMAIL4005", "이메일 인증 시간이 만료되었습니다."),
+    EMAIL_AUTH_ALREADY(HttpStatus.BAD_REQUEST, "EMAIL4006", "이미 인증된 이메일입니다."),
+    EMAIL_AUTH_NOT_FOUND(HttpStatus.BAD_REQUEST, "EMAIL4007", "이메일 인증을 먼저 진행해주세요."),
+    EMAIL_AUTH_NOT_MATCH(HttpStatus.BAD_REQUEST, "EMAIL4008", "이메일 인증번호가 일치하지 않습니다."),
     ;
     private final HttpStatus httpStatus;
     private final String code;
