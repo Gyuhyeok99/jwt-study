@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.util.Random;
 
 import static jwt.security.config.code.status.ErrorStatus.EMAIL_AUTH_NOT_MATCH;
+import static jwt.security.utils.Jwt.*;
 
 @Service
 @Slf4j
@@ -48,7 +49,7 @@ public class MailSendService {
     }
 
 
-    //mail을 어디서 보내는지, 어디로 보내는지 , 인증 번호를 html 형식으로 어떻게 보내는지 작성합니다.
+    //mail을 어디서 보내는지, 어디로 보내는지 , 인증 번호를 html 형식으로 어떻게 보내는지 작성
     public String joinEmail(String email) {
         // 이메일에 대한 기존 인증번호가 있는지 확인하고, 있다면 삭제
         String oldAuthNum = redisUtil.getData(email);
@@ -58,16 +59,7 @@ public class MailSendService {
             redisUtil.deleteData(email);
         }
         makeRandomNumber();
-        String setFrom = username; // email-config에 설정한 자신의 이메일 주소를 입력
-        String toMail = email;
-        String title = "회원 가입 인증 이메일 입니다."; // 이메일 제목
-        String content =
-                "나의 APP을 방문해주셔서 감사합니다." + 	//html 형식으로 작성 !
-                        "<br><br>" +
-                        "인증 번호는 " + authNumber + "입니다." +
-                        "<br>" +
-                        "인증번호를 제대로 입력해주세요"; //이메일 내용 삽입
-        mailSend(setFrom, toMail, title, content);
+        mailSend(username, email, EMAIL_TITLE, EMAIL_CONTENT_PREFIX + authNumber + EMAIL_CONTENT_SUFFIX);
         return Integer.toString(authNumber);
     }
 
