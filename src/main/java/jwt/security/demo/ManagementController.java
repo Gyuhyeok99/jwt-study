@@ -24,11 +24,10 @@ public class ManagementController {
                             responseCode = "403"
                     )
             }
-
     )
     @GetMapping
-    public String get() {
-        return "GET:: management controller";
+    public jwt.security.config.ApiResponse<String> get() {
+        return jwt.security.config.ApiResponse.onSuccess( "GET:: management controller");
     }
     @PostMapping
     public String post() {

@@ -19,7 +19,7 @@ public class UserController {
     private final UserService userService;
 
     @PatchMapping
-    public ApiResponse<?> changePassword(@RequestBody ChangePasswordReq request, Principal connectedUser) {
+    public ApiResponse<String> changePassword(@RequestBody ChangePasswordReq request, Principal connectedUser) {
         userService.changePassword(request, connectedUser);
         return ApiResponse.onSuccess("비밀번호 변경 완료");
     }
