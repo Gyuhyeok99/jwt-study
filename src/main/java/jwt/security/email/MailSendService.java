@@ -3,9 +3,9 @@ package jwt.security.email;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import jwt.security.config.exception.handler.MailHandler;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -24,9 +24,12 @@ public class MailSendService {
 
     private int authNumber;
 
+    @Value("${spring.mail.username}")
+    private String username;
+
     public Boolean checkAuthNum(String email, String authNum) {
-        String storedEmail = redisUtil.getData(authNum);
-        if (storedEmail != null && storedEmail.equals(email)) {
+        String storedAuthNum = redisUtil.getData(email);
+        if (storedAuthNum != null && storedAuthNum.equals(authNum)) {
             log.info("이메일 인증 성공");
             return true;
         } else {
@@ -37,21 +40,25 @@ public class MailSendService {
 
 
     //임의의 6자리 양수를 반환
-    public void makeRandomNumber() {
+    private void makeRandomNumber() {
         Random r = new Random();
-        String randomNumber = "";
-        for(int i = 0; i < 6; i++) {
-            randomNumber += Integer.toString(r.nextInt(10));
-        }
-
-        authNumber = Integer.parseInt(randomNumber);
+        authNumber = r.ints(100000,999999)
+                .findFirst()
+                .getAsInt();
     }
 
 
     //mail을 어디서 보내는지, 어디로 보내는지 , 인증 번호를 html 형식으로 어떻게 보내는지 작성합니다.
     public String joinEmail(String email) {
+        // 이메일에 대한 기존 인증번호가 있는지 확인하고, 있다면 삭제
+        String oldAuthNum = redisUtil.getData(email);
+
+        if (oldAuthNum != null) {
+            log.info("기존 인증번호 삭제 : {}", oldAuthNum);
+            redisUtil.deleteData(email);
+        }
         makeRandomNumber();
-        String setFrom = "dionisos198@naver.com"; // email-config에 설정한 자신의 이메일 주소를 입력
+        String setFrom = username; // email-config에 설정한 자신의 이메일 주소를 입력
         String toMail = email;
         String title = "회원 가입 인증 이메일 입니다."; // 이메일 제목
         String content =
@@ -79,7 +86,7 @@ public class MailSendService {
             // 이러한 경우 MessagingException이 발생
             e.printStackTrace();//e.printStackTrace()는 예외를 기본 오류 스트림에 출력하는 메서드
         }
-        redisUtil.setDataExpire(Integer.toString(authNumber),toMail,60*5L);
+        redisUtil.setDataExpire(toMail, Integer.toString(authNumber), 60*5L);
 
     }
 
