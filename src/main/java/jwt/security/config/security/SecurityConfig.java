@@ -42,6 +42,7 @@ public class SecurityConfig {
             "/swagger-ui.html"
             ,"/h2-console/**"
             ,"/error/**"
+            ,"/login/oauth2/code/kakao"
     };
     private final JwtAuthenticationFilter jwtAuthFilter;
     private final AuthenticationProvider authenticationProvider;
