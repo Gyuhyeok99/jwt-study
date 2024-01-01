@@ -1,25 +1,33 @@
 package jwt.security.auth;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jwt.security.auth.dto.AuthReq;
-import jwt.security.auth.dto.AuthRes;
-import jwt.security.auth.dto.RegisterReq;
+import jwt.security.auth.dto.*;
 import jwt.security.config.exception.handler.UserHandler;
+import jwt.security.kakao.KakaoService;
+import jwt.security.kakao.dto.KakaoUserInfo;
+import jwt.security.user.UserService;
 import jwt.security.utils.JwtService;
 import jwt.security.domain.user.User;
 import jwt.security.user.UserRepository;
 import jwt.security.utils.RedisService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 import static jwt.security.config.code.status.ErrorStatus.USER_NOT_FOUND;
 import static jwt.security.utils.Jwt.HEADER_AUTHORIZATION;
@@ -30,11 +38,12 @@ import static jwt.security.utils.Jwt.TOKEN_PREFIX;
 @Transactional(readOnly = true)
 @Slf4j
 public class AuthService {
-  private final UserRepository userRepository;
+  private final UserService userService;
   private final PasswordEncoder passwordEncoder;
   private final JwtService jwtService;
   private final RedisService redisService;
   private final AuthenticationManager authenticationManager;
+  private final KakaoService kakaoService;
 
   @Transactional
   public AuthRes register(RegisterReq req) {
@@ -44,7 +53,7 @@ public class AuthService {
             .password(passwordEncoder.encode(req.getPassword()))
             .role(req.getRole())
             .build();
-    User savedUser = userRepository.save(user);
+    User savedUser = userService.save(user);
     String accessToken = jwtService.generateToken(user);
     String refreshToken = jwtService.generateRefreshToken(user);
     saveUserToken(savedUser, refreshToken);
@@ -58,8 +67,7 @@ public class AuthService {
   public AuthRes authenticate(AuthReq request) {
     authenticationManager.authenticate
             (new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
-    User user = userRepository.findByEmail(request.getEmail())
-            .orElseThrow(() -> new IllegalArgumentException("유저 존재하지 않음"));
+    User user = userService.findByEmail(request.getEmail());
     String accessToken = jwtService.generateToken(user);
     String refreshToken = jwtService.generateRefreshToken(user);
     revokeAllUserTokens(user);
@@ -84,21 +92,17 @@ public class AuthService {
   }
 
   @Transactional
-  public void refreshToken(
-          HttpServletRequest request,
-          HttpServletResponse response
-  ) throws IOException {
+  public void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
     final String authHeader = request.getHeader(HEADER_AUTHORIZATION);
     final String refreshToken;
     final String userEmail;
-    if (authHeader == null ||!authHeader.startsWith(TOKEN_PREFIX)) {
+    if (authHeader == null ||!authHeader.startsWith(TOKEN_PREFIX))
       return;
-    }
+
     refreshToken = authHeader.substring(7);
     userEmail = jwtService.extractUsername(refreshToken);
     if (userEmail != null) {
-      User user = userRepository.findByEmail(userEmail)
-              .orElseThrow(() -> new UserHandler(USER_NOT_FOUND));
+      User user = userService.findByEmail(userEmail);
       if (jwtService.isTokenValid(refreshToken, user)) {
         String accessToken = jwtService.generateToken(user);
         AuthRes authRes = AuthRes.builder()
@@ -107,6 +111,28 @@ public class AuthService {
                 .build();
         new ObjectMapper().writeValue(response.getOutputStream(), authRes);
       }
+    }
+  }
+
+  @Transactional
+  public ResponseEntity<?> processKakaoUser(String authorizationCode) {
+    // 카카오 서비스를 통해 액세스 토큰 획득
+    // 액세스 토큰을 사용하여 카카오로부터 사용자 정보 획득
+    KakaoUserInfo kakaoUserInfo = kakaoService.getUserInfo(kakaoService.getAccessToken(authorizationCode));
+    // 사용자 이메일을 기반으로 데이터베이스에서 사용자 조회
+    Optional<User> user = userService.findKakaoByEmail(kakaoUserInfo.getEmail());
+
+    if (user.isPresent()) {
+      User findUser = user.get();
+      String accessToken = jwtService.generateToken(findUser);
+      String refreshToken = jwtService.generateRefreshToken(findUser);
+      revokeAllUserTokens(findUser);
+      saveUserToken(findUser, refreshToken);
+      AuthRes authRes = new AuthRes(accessToken, refreshToken);
+      return ResponseEntity.ok(authRes);
+    } else {
+      SocialRes socialRes = new SocialRes(kakaoUserInfo.getNickname(), kakaoUserInfo.getEmail());
+      return ResponseEntity.ok(socialRes);
     }
   }
 }

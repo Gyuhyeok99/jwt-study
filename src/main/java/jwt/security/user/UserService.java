@@ -11,9 +11,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.security.Principal;
+import java.util.Optional;
 
-import static jwt.security.config.code.status.ErrorStatus.PASSWORD_NOT_MATCH;
-import static jwt.security.config.code.status.ErrorStatus.PASSWORD_NOT_MATCH_CONFIRM;
+import static jwt.security.config.code.status.ErrorStatus.*;
 
 @Service
 @RequiredArgsConstructor
@@ -23,6 +23,20 @@ public class UserService {
 
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
+
+    @Transactional
+    public User save(User user) {
+        return userRepository.save(user);
+    }
+
+    public User findByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new UserHandler(USER_NOT_FOUND));
+    }
+
+    public Optional<User> findKakaoByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
 
     @Transactional
 

@@ -5,6 +5,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jwt.security.auth.dto.AuthReq;
 import jwt.security.auth.dto.AuthRes;
 import jwt.security.auth.dto.RegisterReq;
+import jwt.security.config.ApiResponse;
 import jwt.security.kakao.KakaoService;
 import jwt.security.kakao.dto.KakaoUserInfo;
 import lombok.RequiredArgsConstructor;
@@ -37,5 +38,9 @@ public class AuthController {
     authService.refreshToken(req, res);
   }
 
-
+  @GetMapping("/kakao-login")
+  public ApiResponse<ResponseEntity<?>> login(@RequestParam("code") String code) {
+    log.info("인증 부여 코드 : {}", code);
+    return ApiResponse.onSuccess(authService.processKakaoUser(code));
+  }
 }
