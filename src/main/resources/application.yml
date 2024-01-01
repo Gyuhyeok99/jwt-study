@@ -34,29 +34,24 @@ spring:
           kakao:
             client-id: ${kakao.client.id}
             client-secret: ${kakao.client.secret}
-            scope: profile_nickname,account_email
-            client-name: Kakao
-            authorization-grant-type: authorization_code
-            redirect-uri: ${kakao.redirect.url}
             client-authentication-method: POST
+            authorization-grant-type: authorization_code
+            client-name: Kakao
+            provider: kakao
+            redirect-uri: ${kakao.redirect.url}
+            scope:
+              - profile_nickname
+              - profile_image
+              - account_email
         provider:
           kakao:
             authorization-uri: https://kauth.kakao.com/oauth/authorize
             token-uri: https://kauth.kakao.com/oauth/token
             user-info-uri: https://kapi.kakao.com/v2/user/me
             user-name-attribute: id
-
 jwt:
   issuer: test@test.com
   secret_key: ${JWT_SECRET_KEY}
   expiration: 86400000 # 1 day
   refresh-token:
     expiration: 604800000 # 7 days
-
-kakao:
-  client:
-    id: 583834b651139ee57ad540e44d8232dc #${KAKAO_CLIENT_ID}
-    secret: 9RBdf7eDsVR2ZX96SzGdZP3CUaXyK0QY #${KAKAO_CLIENT_SECRET}
-    redirect:
-      url: http://localhost:8080/kakao/callback #${KAKAO_REDIRECT_URL}
-
