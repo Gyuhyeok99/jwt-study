@@ -6,11 +6,10 @@ import jwt.security.auth.dto.AuthReq;
 import jwt.security.auth.dto.AuthRes;
 import jwt.security.auth.dto.RegisterReq;
 import jwt.security.kakao.KakaoService;
-import jwt.security.kakao.KakaoUserInfo;
+import jwt.security.kakao.dto.KakaoUserInfo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -22,7 +21,6 @@ import java.io.IOException;
 public class AuthController {
 
   private final AuthService authService;
-  private final KakaoService kakaoService;
 
   @PostMapping("/register")
   public ResponseEntity<AuthRes> register(@RequestBody RegisterReq req) {
@@ -39,20 +37,5 @@ public class AuthController {
     authService.refreshToken(req, res);
   }
 
-
-  @GetMapping(path="/kakaoLogin")
-  public ResponseEntity<String> login(@RequestParam("code") String code) {
-    //log.info(AUTH_CODE_MSG2 + code);
-    String accessToken = kakaoService.getAccessToken(code);
-    KakaoUserInfo kakaoUserInfo = null;
-    if (accessToken != null && !accessToken.isEmpty()) {
-      kakaoUserInfo = kakaoService.getUserInfo(accessToken);
-      if (kakaoUserInfo != null) {
-        log.info("kakaoUserInfo : " + kakaoUserInfo.toString());
-        return ResponseEntity.ok("LOGIN_MSG + AUTH_CODE_MSG + code" + " )");
-      }
-    }
-    return ResponseEntity.badRequest().body("LOGIN_FAIL_MSG");
-  }
 
 }

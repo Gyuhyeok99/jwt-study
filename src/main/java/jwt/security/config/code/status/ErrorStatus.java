@@ -31,6 +31,11 @@ public enum ErrorStatus implements BaseErrorCode {
     EMAIL_AUTH_ALREADY(HttpStatus.BAD_REQUEST, "EMAIL4006", "이미 인증된 이메일입니다."),
     EMAIL_AUTH_NOT_FOUND(HttpStatus.BAD_REQUEST, "EMAIL4007", "이메일 인증을 먼저 진행해주세요."),
     EMAIL_AUTH_NOT_MATCH(HttpStatus.BAD_REQUEST, "EMAIL4008", "이메일 인증번호가 일치하지 않습니다."),
+
+    // 토근 관련 에러
+    TOKEN_NOT_FOUND(HttpStatus.BAD_REQUEST, "TOKEN4001", "토큰이 존재하지 않습니다."),
+    TOKEN_EXPIRED(HttpStatus.BAD_REQUEST, "TOKEN4002", "토큰이 만료되었습니다."),
+    KAKAO_TOKEN_RECEIVE_FAIL(HttpStatus.INTERNAL_SERVER_ERROR, "TOKEN4003", "카카오 서버로부터 액세스 토큰을 받는데 실패했습니다."),
     ;
     private final HttpStatus httpStatus;
     private final String code;
