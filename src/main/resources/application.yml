@@ -27,6 +27,24 @@ spring:
           starttls:
             enable: true
           auth: true
+  security:
+    oauth2:
+      client:
+        registration:
+          kakao:
+            client-id: ${kakao.client.id}
+            client-secret: ${kakao.client.secret}
+            scope: profile_nickname,account_email
+            client-name: Kakao
+            authorization-grant-type: authorization_code
+            redirect-uri: ${kakao.redirect.url}
+            client-authentication-method: POST
+        provider:
+          kakao:
+            authorization-uri: https://kauth.kakao.com/oauth/authorize
+            token-uri: https://kauth.kakao.com/oauth/token
+            user-info-uri: https://kapi.kakao.com/v2/user/me
+            user-name-attribute: id
 
 jwt:
   issuer: test@test.com
@@ -34,4 +52,11 @@ jwt:
   expiration: 86400000 # 1 day
   refresh-token:
     expiration: 604800000 # 7 days
+
+kakao:
+  client:
+    id: 583834b651139ee57ad540e44d8232dc #${KAKAO_CLIENT_ID}
+    secret: 9RBdf7eDsVR2ZX96SzGdZP3CUaXyK0QY #${KAKAO_CLIENT_SECRET}
+    redirect:
+      url: http://localhost:8080/kakao/callback #${KAKAO_REDIRECT_URL}
 
